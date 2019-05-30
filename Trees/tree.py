@@ -22,8 +22,11 @@ class Tree:
         else:
             self.__root.addChild(node)
 
-    def display(self):
-        self.__root.display(0, set())
+    def display(self, tabs=1):
+        if self.hasRoot:
+            self.__root.display(0, set(), tabs)
+        else:
+            print('There are no nodes in the tree')
 
 
 class TreeNode:
@@ -105,28 +108,28 @@ class TreeNode:
             i += 1
         return left, right
 
-    def display(self, level, lineLevels, topLines=False, isLastChild=False):
+    def display(self, level, lineLevels, tabs, topLines=False, isLastChild=False):
         left, right = self._splitChildren()
         if topLines:
             lineLevels.add(level - 1)
         nextTopLines = False
         for child in right:
-            child.display(level + 1, lineLevels, nextTopLines)
+            child.display(level + 1, lineLevels,tabs, nextTopLines)
             nextTopLines = True
         lineLevels.add(level - 1)
-        TreeNode.printLineVerticals(lineLevels, level)
-        print('-' * 11 + str(self.value))
+        TreeNode.printLineVerticals(lineLevels, level, tabs)
+        print(('-' * ((4 * tabs) - 1)) + str(self.value))
         if isLastChild:
             lineLevels.remove(level - 1)
         nextTopLines = True
         for i in range(len(left)):
             child = left[i]
-            child.display(level + 1, lineLevels, nextTopLines, i == (len(left) - 1))
+            child.display(level + 1, lineLevels,tabs, nextTopLines, i == (len(left) - 1))
             nextTopLines = True
 
     @staticmethod
-    def printLineVerticals(lineLevels, level):
+    def printLineVerticals(lineLevels, level, tabs):
         for i in range(level):
-            print('\t\t\t', end='')
+            print(('\t ' * tabs), end='')
             if i in lineLevels:
                 print('|', end='')
